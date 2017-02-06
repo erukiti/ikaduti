@@ -42,15 +42,17 @@ const patterns = [{
             '今日はもう休んじゃえばいいのよ。'
         ]
     }, {
-        re: /(バブ|ばぶ|ママ)/,
+        re: /(バブ|ばぶ|ママ|よしよし)/,
         texts: [
             'あらあら、赤ちゃんね。かわいいわね。',
-            '赤ちゃんなのね、仕方ないわね。甘えてもいいのよ。'
+            '赤ちゃんなのね、仕方ないわね。甘えてもいいのよ。',
+            'よしよし、甘えたさんねー。いいこいいこー。'
         ]
     }, {
         re: /[uU][rR][lL]/,
-        text: [
-            'http://samezi-but.com/botheaven/bots/8'
+        texts: [
+            'http://samezi-but.com/botheaven/bots/8 よ。',
+            'ソースは https://github.com/erukiti/ikaduti よ。'
         ]
     }
 ]
@@ -63,8 +65,9 @@ const prefixs = [
 ]
 
 function ikaduti(name, text) {
+    var isHit = false
     patterns.forEach(function(pattern) {
-        if (pattern.re.exec(text)) {
+        if (!isHit && pattern.re.exec(text)) {
             const prefix = prefixs[Math.floor(Math.random() * prefixs.length)]
             const message = pattern.texts[Math.floor(Math.random() * pattern.texts.length)]
             api.slack.talk(prefix + message)
@@ -73,7 +76,7 @@ function ikaduti(name, text) {
             } else {
                 api.storage['amaenbo_' + name] = 1
             }
-            return
+            isHit = true
         }
     })
 }
